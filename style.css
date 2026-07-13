@@ -1,0 +1,368 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  background-color: #ffe69a;
+  background-image:
+    repeating-linear-gradient(to right, rgba(120, 190, 225, 0.2) 0 19px, transparent 19px 38px),
+    repeating-linear-gradient(to bottom, rgba(120, 190, 225, 0.2) 0 19px, transparent 19px 38px);
+  min-height: 100%;
+  user-select: none;
+}
+
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.answer-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 2vw;
+  padding: 3vw;
+}
+
+.answer-box {
+  flex: 1;
+  min-height: 0;
+  background: #f3f3f3;
+  border-radius: 10px;
+  padding: 1.5rem;
+  overflow-y: auto;
+  text-align: left;
+  font-size: 1.1rem;
+  line-height: 2.2;
+  color: #333;
+}
+
+.answer-box.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #555;
+}
+
+.title-bar {
+  background: #92b4ec;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  flex-shrink: 0;
+}
+
+.title-bar h1 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.title-help {
+  color: #ffffff;
+  font-size: 0.8rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 2.7fr 1fr;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 2vw;
+  padding: 3vw;
+  flex: 1;
+  min-height: 0;
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+.sentence-stack {
+  display: grid;
+  grid-template-rows: minmax(0, 112fr) minmax(0, 154fr) minmax(0, 112fr);
+  gap: 1.6vw;
+  min-height: 0;
+}
+
+.prev-sentence,
+.board,
+.next-sentence {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid #ffd24c;
+  border-radius: 10px;
+  box-shadow: 0 6px 14px -4px rgba(0, 0, 0, 0.18);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+}
+
+.prev-sentence,
+.next-sentence {
+  background: #fffcf5;
+  margin-inline: 2.3vw;
+  opacity: 0.8;
+  font-size: 1rem;
+}
+
+.board {
+  background: #ffffff;
+}
+
+#boardText {
+  line-height: 2;
+  user-select: none;
+  cursor: default;
+}
+
+#prevSentenceText {
+  line-height: 2;
+}
+
+.char {
+  display: inline-block;
+  white-space: pre;
+}
+
+.exception-word {
+  display: inline-block;
+  border: 2px solid #f97316;
+  border-radius: 4px;
+  padding: 0 0.1em;
+}
+
+.exception-word.selecting {
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.char.selecting {
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.4em;
+  vertical-align: middle;
+  background: #333333;
+  animation: cursor-blink 1s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.gap {
+  position: relative;
+  display: inline-block;
+  width: 0.1em;
+  height: 1em;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+/* 사선 클릭 판정용 히트영역을 시각적 너비와 무관하게 넓힘 (0.1em은 마우스로 정확히 누르기 너무 좁음) */
+.gap::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 22px;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+.cut-line {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  height: 1.7em;
+  transform: translate(-50%, -50%) rotate(-25deg);
+  pointer-events: none;
+}
+
+.cut-line.cut-red {
+  background: #e5484d;
+}
+
+.cut-line.cut-blue {
+  background: #3b82f6;
+}
+
+.cut-line.cut-gray {
+  background: none;
+  width: 0;
+  border-left: 2px dashed #999999;
+}
+
+.cut-annotation {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.cut-annotation.above {
+  bottom: 100%;
+  margin-bottom: 0.15em;
+  color: #3b82f6;
+}
+
+.cut-annotation.below {
+  top: 100%;
+  margin-top: 0.15em;
+  color: #999999;
+}
+
+.full-text {
+  background: #f3f3f3;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  border-radius: 10px;
+}
+
+.paste-area {
+  width: 100%;
+  flex: 1;
+  border: none;
+  background: transparent;
+  resize: none;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: inherit;
+}
+
+.paste-area::placeholder {
+  color: #999;
+}
+
+.paste-area:focus {
+  outline: none;
+}
+
+.sentence-list {
+  font-size: 1rem;
+  line-height: 2;
+  text-align: left;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.full-text-actions[hidden] {
+  display: none;
+}
+
+.full-text-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.full-text-actions button {
+  font: inherit;
+  font-size: 0.85rem;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.full-text-actions button:hover {
+  background: #e5e5e5;
+}
+
+.sentence {
+  cursor: pointer;
+}
+
+.sentence:hover {
+  background: #e5e5e5;
+}
+
+.sentence.current {
+  background: #ffffff;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  html {
+    height: auto;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  body {
+    min-height: auto;
+  }
+
+  .page {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .title-help {
+    display: none;
+  }
+
+  .layout {
+    height: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .sentence-stack {
+    grid-template-rows: auto;
+    min-height: auto;
+  }
+
+  .prev-sentence,
+  .next-sentence {
+    margin-inline: 0;
+  }
+
+  .full-text {
+    min-height: 200px;
+  }
+
+  .answer-content {
+    flex-direction: column;
+  }
+
+  .answer-box {
+    min-height: 200px;
+  }
+}

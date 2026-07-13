@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>형태소쪼개기</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page" id="mainPage">
+    <header class="title-bar">
+      <h1>형태소 쪼개기</h1>
+      <p class="title-help">방향키+스페이스: 쪼개기 / Shift+방향키+스페이스: 예외형태소 / 클릭: 사선종류편집 / 백스페이스: 삭제</p>
+    </header>
+    <div class="layout">
+      <div class="left-column">
+        <div class="sentence-stack">
+          <section class="prev-sentence">
+            <p id="prevSentenceText">이전 문장(쪼갠 문장)</p>
+          </section>
+          <section class="board">
+            <p id="boardText">현재 문장</p>
+          </section>
+          <section class="next-sentence">
+            <p id="nextSentenceText">다음 문장</p>
+          </section>
+        </div>
+      </div>
+      <aside class="full-text">
+        <textarea id="pasteArea" class="paste-area" placeholder="여기에 원본 전문을 붙여넣으세요"></textarea>
+        <div id="sentenceList" class="sentence-list" hidden></div>
+        <div id="fullTextActions" class="full-text-actions" hidden>
+          <button type="button" id="rePasteBtn">다시 붙여넣기</button>
+          <button type="button" id="spellcheckBtn">맞춤법 교정</button>
+          <button type="button" id="clearBtn">지우기</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <div class="page answer-page" id="answerPage">
+    <header class="title-bar">
+      <h1>정답</h1>
+    </header>
+    <div class="answer-content">
+      <section class="answer-box empty" id="splitText">쪼갠전문</section>
+      <section class="answer-box empty" id="answerBox">정답</section>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
