@@ -88,10 +88,10 @@
 
 ## 기술 전제
 
-- 정적 웹 (서버 없음) 원칙. 배포 라인은 기존 INTP 프로젝트와 동일 — intpdiary Flask 서버의 static/morpheme/에 파일을 복사해서 서빙.
-- **예외 1**: 맞춤법 교정 기능(2026-07-13 추가)은 다음(Daum) 맞춤법 검사기를 CORS 없이 호출하기 위해 intpdiary Flask에 `/api/morpheme/spellcheck` 중계 라우트를 둠 (`routes/morpheme.py`).
-- **예외 2**: 정답 비교 기능(2026-07-13 추가)은 intpdiary Flask에 kiwipiepy(순수 파이썬/C++ 형태소분석기, 자바 불필요)를 `pip install --break-system-packages`로 설치하고 `/api/morpheme/analyze` 라우트를 둠. 서버 재시작 시 모델 로딩으로 메모리 사용량이 커짐(약 500MB+) — 재시작 후 정상 기동 여부 확인할 것.
-- 위 두 예외 외에는 서버 의존을 확장하지 않는다.
+- 정적 웹 (서버 없음) 원칙. **배포는 2026-07-14부터 GitHub Pages** — 이 저장소(main 브랜치)에 push하면 https://mrsbarnes.github.io/jjogaegi/ 에 자동 반영됨. intpdiary Flask 서버의 static/morpheme/ 서빙 방식(심볼릭 링크)은 이 날짜에 완전히 폐지됨 — 이제 GitHub Pages가 유일한 배포처.
+- **예외 1**: 맞춤법 교정 기능(2026-07-13 추가)은 다음(Daum) 맞춤법 검사기를 CORS 없이 호출하기 위해 intpdiary Flask에 `/api/morpheme/spellcheck` 중계 라우트를 둠 (`routes/morpheme.py`, intpdiary 저장소). GitHub Pages는 정적 사이트라 이 백엔드를 대체할 수 없음 — script.js는 절대 주소(`https://intpdiary.duckdns.org/api/morpheme/spellcheck`)로 호출하고, intpdiary의 `app.py`에 이 출처(`https://mrsbarnes.github.io`)를 허용하는 CORS 헤더가 추가돼 있음(2026-07-14).
+- **예외 2**: 정답 비교 기능(2026-07-13 추가)은 intpdiary Flask에 kiwipiepy(순수 파이썬/C++ 형태소분석기, 자바 불필요)를 `pip install --break-system-packages`로 설치하고 `/api/morpheme/analyze` 라우트를 둠(intpdiary 저장소). 마찬가지로 절대 주소 + CORS로 GitHub Pages에서 호출. 서버 재시작 시 모델 로딩으로 메모리 사용량이 커짐(약 500MB+) — 재시작 후 정상 기동 여부 확인할 것.
+- 위 두 예외(백엔드 API 자체)는 intpdiary 저장소의 `routes/morpheme.py`에 그대로 남아있고 건드리지 않는다 — 여기(jjogaegi)서는 프론트엔드 코드만 관리한다. 위 두 예외 외에는 서버 의존을 확장하지 않는다.
 - 저장은 로컬 우선(localStorage). 동기화가 필요해지면 그때 논의 (선제 구현 금지).
 - 외부 형태소 분석 라이브러리를 **쪼개는 과정**에 도입 금지 (절대 규칙 1 참조). kiwipiepy는 "결과 이후 정답 비교"용으로만 쓰고, 도마의 사선 긋기 로직에는 절대 연결하지 않는다.
 
