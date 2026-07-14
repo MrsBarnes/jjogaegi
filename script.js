@@ -233,7 +233,7 @@ async function updateAnswerBox(text) {
     return;
   }
   try {
-    const res = await fetch('/api/morpheme/analyze', {
+    const res = await fetch('https://intpdiary.duckdns.org/api/morpheme/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text }),
@@ -425,7 +425,7 @@ spellcheckBtn.addEventListener('click', async () => {
   spellcheckBtn.disabled = true;
   spellcheckBtn.textContent = '교정 중…';
   try {
-    const res = await fetch('/api/morpheme/spellcheck', {
+    const res = await fetch('https://intpdiary.duckdns.org/api/morpheme/spellcheck', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text }),
