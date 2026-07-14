@@ -13,10 +13,12 @@ html {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-  background-color: #ffe69a;
-  background-image:
-    repeating-linear-gradient(to right, rgba(120, 190, 225, 0.2) 0 19px, transparent 19px 38px),
-    repeating-linear-gradient(to bottom, rgba(120, 190, 225, 0.2) 0 19px, transparent 19px 38px);
+  background-color: #f3e8c8;
+  background-image: url('bg000.png');
+  background-size: cover;
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: 100%;
   user-select: none;
 }
